@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Aplikacja do typowania meczów i statystyk drużyn
 
 MVP aplikacji webowej stworzonej w Python 3 + Flask + SQLite + Jinja2 templates + CSS.
@@ -118,3 +119,6 @@ Aplikacja stworzona na potrzeby pracy licencjackiej.
 
 
 
+=======
+# flask-football-predictions
+>>>>>>> github/main
