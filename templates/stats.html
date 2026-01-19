@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Statystyki - Typowanie Meczów{% endblock %}
+
+{% block content %}
+<h1>Twoje Statystyki</h1>
+
+<div class="stats-summary">
+    <div class="stat-card">
+        <h3>Ocenione typy</h3>
+        <p class="stat-number">{{ total }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Trafione</h3>
+        <p class="stat-number stat-success">{{ correct }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Skuteczność</h3>
+        <p class="stat-number stat-rate">{{ success_rate }}%</p>
+    </div>
+</div>
+
+{% if predictions %}
+    <h2>Szczegóły</h2>
+    <div class="stats-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Data meczu</th>
+                    <th>Gospodarze</th>
+                    <th>Goście</th>
+                    <th>Twój typ</th>
+                    <th>Wynik</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pred in predictions %}
+                <tr class="{% if pred.predicted_home == pred.home_score and pred.predicted_away == pred.away_score %}correct{% else %}incorrect{% endif %}">
+                    <td>{{ pred.match_date.replace('T', ' ')[:16] }}</td>
+                    <td><strong>{{ pred.home_team }}</strong></td>
+                    <td><strong>{{ pred.away_team }}</strong></td>
+                    <td>{{ pred.predicted_home }} : {{ pred.predicted_away }}</td>
+                    <td>{{ pred.home_score }} : {{ pred.away_score }}</td>
+                    <td>
+                        {% if pred.predicted_home == pred.home_score and pred.predicted_away == pred.away_score %}
+                            <span class="status status-trafiony">✅ Trafiony</span>
+                        {% else %}
+                            <span class="status status-nietrafiony">❌ Nietrafiony</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="empty-state">
+        <p>Nie masz jeszcze żadnych ocenionych typów. Statystyki pojawią się po zakończeniu meczów, na które typowałeś.</p>
+    </div>
+{% endif %}
+{% endblock %}
+
+
+
+
+
+
+

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero">
+    <h1>Witaj w aplikacji typowania meczów!</h1>
+    <p class="lead">Typuj wyniki meczów piłkarskich i sprawdź swoją skuteczność</p>
+    
+    {% if not session.user_id %}
+        <div class="hero-actions">
+            <a href="{{ url_for('register') }}" class="btn btn-primary">Zarejestruj się</a>
+            <a href="{{ url_for('login') }}" class="btn btn-secondary">Zaloguj się</a>
+        </div>
+    {% else %}
+        <div class="hero-actions">
+            <a href="{{ url_for('matches') }}" class="btn btn-primary">Przeglądaj mecze</a>
+            <a href="{{ url_for('my_predictions') }}" class="btn btn-secondary">Moje typy</a>
+        </div>
+    {% endif %}
+</div>
+
+<div class="features">
+    {% if session.user_id %}
+        <a href="{{ url_for('matches') }}" class="feature-card feature-link">
+            <h3>🎯 Typuj mecze</h3>
+            <p>Wprowadź swoje przewidywania wyników meczów piłkarskich</p>
+        </a>
+        <a href="{{ url_for('stats') }}" class="feature-card feature-link">
+            <h3>📊 Sprawdzaj statystyki</h3>
+            <p>Śledź swoją skuteczność i porównuj wyniki</p>
+        </a>
+        <a href="{{ url_for('my_predictions') }}" class="feature-card feature-link">
+            <h3>🏆 Rywalizuj</h3>
+            <p>Sprawdź jak dobrze przewidujesz wyniki meczów</p>
+        </a>
+    {% else %}
+        <a href="{{ url_for('login') }}" class="feature-card feature-link">
+            <h3>🎯 Typuj mecze</h3>
+            <p>Wprowadź swoje przewidywania wyników meczów piłkarskich</p>
+        </a>
+        <a href="{{ url_for('login') }}" class="feature-card feature-link">
+            <h3>📊 Sprawdzaj statystyki</h3>
+            <p>Śledź swoją skuteczność i porównuj wyniki</p>
+        </a>
+        <a href="{{ url_for('login') }}" class="feature-card feature-link">
+            <h3>🏆 Rywalizuj</h3>
+            <p>Sprawdź jak dobrze przewidujesz wyniki meczów</p>
+        </a>
+    {% endif %}
+</div>
+{% endblock %}
+
+

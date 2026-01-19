@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Moje Typy - Typowanie Meczów{% endblock %}
+
+{% block content %}
+<h1>Moje Typy</h1>
+
+{% if predictions %}
+    <div class="predictions-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Data meczu</th>
+                    <th>Gospodarze</th>
+                    <th>Goście</th>
+                    <th>Twój typ</th>
+                    <th>Wynik</th>
+                    <th>Status</th>
+                    <th>Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pred in predictions %}
+                <tr class="{% if pred.status == 'trafiony' %}correct{% elif pred.status == 'nietrafiony' %}incorrect{% endif %}">
+                    <td>{{ pred.match_date.replace('T', ' ')[:16] }}</td>
+                    <td><strong>{{ pred.home_team }}</strong></td>
+                    <td><strong>{{ pred.away_team }}</strong></td>
+                    <td>{{ pred.predicted_home }} : {{ pred.predicted_away }}</td>
+                    <td>
+                        {% if pred.home_score is not none %}
+                            {{ pred.home_score }} : {{ pred.away_score }}
+                        {% else %}
+                            <span class="pending">- : -</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="status status-{{ pred.status }}">
+                            {% if pred.status == 'trafiony' %}
+                                ✅ Trafiony
+                            {% elif pred.status == 'nietrafiony' %}
+                                ❌ Nietrafiony
+                            {% else %}
+                                ⏳ Oczekiwanie
+                            {% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        {% if pred.status == 'oczekiwanie' %}
+                            <form method="POST" action="{{ url_for('delete_prediction', prediction_id=pred.id) }}" 
+                                  onsubmit="return confirm('Czy na pewno chcesz usunąć ten typ?');" class="inline-form">
+                                <button type="submit" class="btn btn-small btn-danger">Usuń</button>
+                            </form>
+                            <a href="{{ url_for('matches') }}" class="btn btn-small">Edytuj</a>
+                        {% else %}
+                            <span class="no-action">-</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="empty-state">
+        <p>Nie masz jeszcze żadnych typów. <a href="{{ url_for('matches') }}">Dodaj swój pierwszy typ!</a></p>
+    </div>
+{% endif %}
+{% endblock %}
+
+
+
+
+
+
+

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Mecze - Typowanie Meczów{% endblock %}
+
+{% block content %}
+<h1>Mecze</h1>
+<p>Wybierz mecz i wprowadź swój typ wyniku. Możesz dodać lub zmienić typ tylko dla meczów, które jeszcze się nie rozpoczęły.</p>
+
+<div class="matches-table">
+    <table>
+        <thead>
+            <tr>
+                <th>Data i godzina</th>
+                <th>Gospodarze</th>
+                <th>Goście</th>
+                <th>Wynik</th>
+                <th>Twój typ</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for match in matches %}
+            <tr class="{% if match.home_score is not none %}finished{% endif %}">
+                <td>{{ match.match_date.replace('T', ' ')[:16] }}</td>
+                <td><strong>{{ match.home_team }}</strong></td>
+                <td><strong>{{ match.away_team }}</strong></td>
+                <td>
+                    {% if match.home_score is not none %}
+                        <span class="result">{{ match.home_score }} : {{ match.away_score }}</span>
+                    {% else %}
+                        <span class="pending">- : -</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if match.prediction_id %}
+                        {{ match.predicted_home }} : {{ match.predicted_away }}
+                    {% else %}
+                        <span class="no-prediction">Brak typu</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if match.home_score is none and match.away_score is none %}
+                        <form method="POST" action="{{ url_for('predict') }}" class="inline-form">
+                            <input type="hidden" name="match_id" value="{{ match.id }}">
+                            <div class="prediction-inputs">
+                                <input type="number" name="predicted_home" 
+                                       value="{{ match.predicted_home if match.predicted_home else 0 }}" 
+                                       min="0" required class="score-input">
+                                <span>:</span>
+                                <input type="number" name="predicted_away" 
+                                       value="{{ match.predicted_away if match.predicted_away else 0 }}" 
+                                       min="0" required class="score-input">
+                            </div>
+                            <button type="submit" class="btn btn-small">
+                                {% if match.prediction_id %}Aktualizuj{% else %}Dodaj typ{% endif %}
+                            </button>
+                        </form>
+                    {% else %}
+                        <span class="finished-label">Zakończony</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
